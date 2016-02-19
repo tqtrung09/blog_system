@@ -1,0 +1,42 @@
+<% provide(:title, @entry.user.name) %>
+<div class="row">
+  <aside class="col-md-4">
+    <section class="user_info">
+      <h1>
+        <%= gravatar_for @entry.user %>
+        <%= @entry.user.name %>
+      </h1>
+    </section>
+    <section class="user_info">
+      <h1>
+        <strong><%= @entry.title %></strong></br>
+        <%= @entry.content %>
+      </h1>
+    </section>
+
+    <% if logged_in?  %>
+      <section class="comment_form">
+
+        <%= form_for(@comment) do |f| %>
+           <%= render 'shared/error_messages', object: f.object %>
+            <div class="field">
+               <%= f.text_area :content, placeholder: "Compose new comment..." %>
+               <%= f.hidden_field :entry_id, value: @entry.id %>
+           </div>
+           <%= f.submit "Post", class: "btn btn-primary" %>
+        <% end %>
+
+      </section>
+    <% end %>
+
+  </aside>
+  <div class="col-md-8">
+    <% if @entry.comments.any? %>
+      <h3>Comments (<%= @entry.comments.count %>)</h3>
+      <ol class="comments">
+        <%= render @comments %>
+      </ol>
+      <%= will_paginate @comments %>
+    <% end %>
+  </div>
+</div>
